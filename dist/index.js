@@ -32,10 +32,7 @@ class LunchMoney {
         return __awaiter(this, void 0, void 0, function* () {
             let url = `${base}${endpoint}`;
             if (method === 'GET' && args) {
-                url += '?';
-                url += Object.entries(args)
-                    .map(([key, value]) => `${key}=${value}`)
-                    .join('&');
+                url += '?' + Object.entries(args).map(([key, value]) => `${key}=${value}`);
             }
             const headers = new Headers();
             headers.set('Accept', '*/*');
@@ -63,23 +60,19 @@ class LunchMoney {
             return this.get('/v1/assets');
         });
     }
-    getPlaidAccounts() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.get('/v1/plaid_accounts')).plaid_accounts;
-        });
-    }
     getTransactions(args) {
         return __awaiter(this, void 0, void 0, function* () {
             return (yield this.get('/v1/transactions', args)).transactions;
         });
     }
-    createTransactions(transactions, applyRules = false, checkForRecurring = false, debitAsNegative = false) {
+    createTransactions(transactions, { applyRules = false, checkForRecurring = false, debitAsNegative = false, skipDuplicates = false }) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.post('/v1/transactions', {
                 transactions: transactions,
                 apply_rules: applyRules,
                 check_for_recurring: checkForRecurring,
-                debit_as_negative: debitAsNegative
+                debit_as_negative: debitAsNegative,
+                skip_duplicates: skipDuplicates
             });
             return response;
         });
